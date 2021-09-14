@@ -245,15 +245,24 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b09503bf31e81634fa91f547c2ca68e3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  connectionColor: {r: 0, g: 0.7442899, b: 1, a: 1}
-  radius: 0.05
+  firstVectorColor: {r: 1, g: 0, b: 0, a: 1}
+  secondVectorColor: {r: 0, g: 1, b: 0, a: 1}
+  thirdVectorColor: {r: 0, g: 0, b: 1, a: 1}
+  firstAddVectorColor: {r: 1, g: 0, b: 1, a: 1}
+  secondAddVectorColor: {r: 1, g: 1, b: 1, a: 1}
+  crossVectorColor: {r: 1, g: 0.92156863, b: 0.015686275, a: 1}
+  angleColor: {r: 0.5, g: 0.5, b: 0.5, a: 1}
+  connectionColor: {r: 0, g: 1, b: 1, a: 1}
+  radius: 0.1
   points:
   - {x: 0, y: 0, z: 0}
-  - {x: 1, y: 0, z: 0}
-  - {x: 0, y: 1, z: 0}
-  - {x: 1, y: 0, z: 0}
-  - {x: 0, y: 0, z: 0}
-  - {x: 0, y: 0, z: 0}
+  - {x: 1, y: 0.5, z: 0.5}
+  - {x: 0, y: 1, z: -0.5}
+  - {x: 1, y: 1.5, z: 0}
+  - {x: -0.75, y: 0.5, z: 1}
+  - {x: 0.25, y: 1, z: 1.5}
+  - {x: -0.75, y: 1.5, z: 0.5}
+  - {x: 0.25, y: 2, z: 1}
 --- !u!4 &808495687
 Transform:
   m_ObjectHideFlags: 0

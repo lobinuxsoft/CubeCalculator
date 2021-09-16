@@ -21,8 +21,11 @@ public class CuboTool : MonoBehaviour
     {
         #region Calculo del cubo
 
-        points[3] = points[1] + points[2];
-        points[4] = Vector3.Normalize((Vector3.Cross(points[1], points[2])));
+        points[0] = Vector3.Normalize(points[0]);
+        points[1] = Vector3.Normalize(points[1]);
+        points[2] = Vector3.Normalize(points[2]);
+        points[3] = points[0] + points[1] + points[2];
+        points[4] = points[0] + Vector3.Normalize((Vector3.Cross(points[1], points[2])));
         points[5] = points[4] + points[1];
         points[6] = points[2] + points[4];
         points[7] = points[2] + points[5];

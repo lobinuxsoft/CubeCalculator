@@ -274,17 +274,20 @@ MonoBehaviour:
     m_Mode: 0
     m_NumColorKeys: 8
     m_NumAlphaKeys: 2
+  fontSize: 5
   connectionColor: {r: 0, g: 1, b: 1, a: 1}
   radius: 0.1
+  heightCutPoint: 0.3
+  planeSize: 1.88
   points:
   - {x: 0, y: 0, z: 0}
-  - {x: 1, y: 0.5, z: 0.5}
-  - {x: 0.5, y: 0.5, z: -1}
-  - {x: 1.5, y: 1, z: -0.5}
-  - {x: -0.50709254, y: 0.8451542, z: 0.16903085}
-  - {x: 0.49290746, y: 1.3451543, z: 0.66903085}
-  - {x: -0.0070925355, y: 1.3451543, z: -0.83096915}
-  - {x: 0.99290746, y: 1.8451543, z: -0.33096915}
+  - {x: 0.8164966, y: 0.4082483, z: 0.4082483}
+  - {x: 0.4082483, y: 0.4082483, z: -0.8164966}
+  - {x: 1.2247449, y: 0.8164966, z: -0.4082483}
+  - {x: -0.5070926, y: 0.8451542, z: 0.16903085}
+  - {x: 0.30940402, y: 1.2534025, z: 0.57727915}
+  - {x: -0.09884429, y: 1.2534025, z: -0.64746577}
+  - {x: 0.7176523, y: 1.6616508, z: -0.23921746}
 --- !u!4 &808495687
 Transform:
   m_ObjectHideFlags: 0
@@ -398,7 +401,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &1981865032
 MonoBehaviour:
   m_ObjectHideFlags: 0

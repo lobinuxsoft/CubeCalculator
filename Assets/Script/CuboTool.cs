@@ -21,59 +21,67 @@ public class CuboTool : MonoBehaviour
     {
         #region Calculo del cubo
 
-        points[3] = points[0] + points[1] + points[2];
-        points[4] = points[0] + Vector3.Cross(points[1], points[2]);
+        points[3] = points[1] + points[2];
+        points[4] = Vector3.Normalize((Vector3.Cross(points[1], points[2])));
         points[5] = points[4] + points[1];
         points[6] = points[2] + points[4];
         points[7] = points[2] + points[5];
 
         #endregion
 
-        Gizmos.color = firstVectorColor;
-        Gizmos.DrawSphere(points[0], radius);
+        Handles.color = firstVectorColor;
+        Handles.SphereHandleCap(0, points[0], Quaternion.identity, radius, EventType.Repaint);
+        Handles.Label(points[0] + Camera.current.transform.right * .25f, $"X={points[0].x} \n Y={points[0].y} \n Z={points[0].z}");
 
-        Gizmos.color = secondVectorColor;
-        Gizmos.DrawSphere(points[1], radius);
+        Handles.color = secondVectorColor;
+        Handles.SphereHandleCap(0, points[1], Quaternion.identity, radius, EventType.Repaint);
+        Handles.Label(points[1] + Camera.current.transform.right * .25f, $"X={points[1].x} \n Y={points[1].y} \n Z={points[1].z}");
 
-        Gizmos.color = thirdVectorColor;
-        Gizmos.DrawSphere(points[2], radius);
+        Handles.color = thirdVectorColor;
+        Handles.SphereHandleCap(0, points[2], Quaternion.identity, radius, EventType.Repaint);
+        Handles.Label(points[2] + Camera.current.transform.right * .25f, $"X={points[2].x} \n Y={points[2].y} \n Z={points[2].z}");
 
-        Gizmos.color = firstAddVectorColor;
-        Gizmos.DrawSphere(points[3], radius);
+        Handles.color = firstAddVectorColor;
+        Handles.SphereHandleCap(0, points[3], Quaternion.identity, radius, EventType.Repaint);
+        Handles.Label(points[3] + Camera.current.transform.right * .25f, $"X={points[3].x} \n Y={points[3].y} \n Z={points[3].z}");
 
-        Gizmos.color = crossVectorColor;
-        Gizmos.DrawSphere(points[4], radius);
+        Handles.color = crossVectorColor;
+        Handles.SphereHandleCap(0, points[4], Quaternion.identity, radius, EventType.Repaint);
+        Handles.Label(points[4] + Camera.current.transform.right * .25f, $"X={points[4].x} \n Y={points[4].y} \n Z={points[4].z}");
 
-        Gizmos.color = secondAddVectorColor;
-        Gizmos.DrawSphere(points[5], radius);
+        Handles.color = crossVectorColor;
+        Handles.SphereHandleCap(0, points[5], Quaternion.identity, radius, EventType.Repaint);
+        Handles.Label(points[5] + Camera.current.transform.right * .25f, $"X={points[5].x} \n Y={points[5].y} \n Z={points[5].z}");
 
-        Gizmos.color = secondAddVectorColor;
-        Gizmos.DrawSphere(points[6], radius);
+        Handles.color = secondAddVectorColor;
+        Handles.SphereHandleCap(0, points[6], Quaternion.identity, radius, EventType.Repaint);
+        Handles.Label(points[6] + Camera.current.transform.right * .25f, $"X={points[6].x} \n Y={points[6].y} \n Z={points[6].z}");
 
-        Gizmos.color = secondAddVectorColor;
-        Gizmos.DrawSphere(points[7], radius);
+        Handles.color = secondAddVectorColor;
+        Handles.SphereHandleCap(0, points[7], Quaternion.identity, radius, EventType.Repaint);
+        Handles.Label(points[7] + Camera.current.transform.right * .25f, $"X={points[7].x} \n Y={points[7].y} \n Z={points[7].z}");
 
         Handles.color = angleColor;
-        Handles.DrawSolidArc(points[0], points[4], points[1], Vector3.Angle(points[1], points[2]), 1);
+        Handles.DrawSolidArc(points[0], points[4], points[1], Vector3.Angle(points[1], points[2]), .25f);
 
-        Gizmos.color = connectionColor;
-        Gizmos.DrawLine(points[0], points[1]);
-        Gizmos.DrawLine(points[1], points[3]);
-        Gizmos.DrawLine(points[3], points[2]);
-        Gizmos.DrawLine(points[2], points[0]);
+        Handles.color = connectionColor;
+        Handles.DrawLine(points[0], points[1]);
+        Handles.DrawLine(points[1], points[3]);
+        Handles.DrawLine(points[3], points[2]);
+        Handles.DrawLine(points[2], points[0]);
 
-        Gizmos.DrawLine(points[0], points[2]);
-        Gizmos.DrawLine(points[2], points[6]);
-        Gizmos.DrawLine(points[6], points[4]);
-        Gizmos.DrawLine(points[4], points[0]);
+        Handles.DrawLine(points[0], points[2]);
+        Handles.DrawLine(points[2], points[6]);
+        Handles.DrawLine(points[6], points[4]);
+        Handles.DrawLine(points[4], points[0]);
 
-        Gizmos.DrawLine(points[1], points[3]);
-        Gizmos.DrawLine(points[3], points[7]);
-        Gizmos.DrawLine(points[7], points[5]);
-        Gizmos.DrawLine(points[5], points[1]);
+        Handles.DrawLine(points[1], points[3]);
+        Handles.DrawLine(points[3], points[7]);
+        Handles.DrawLine(points[7], points[5]);
+        Handles.DrawLine(points[5], points[1]);
 
-        Gizmos.DrawLine(points[4], points[5]);
-        Gizmos.DrawLine(points[6], points[7]);
+        Handles.DrawLine(points[4], points[5]);
+        Handles.DrawLine(points[6], points[7]);
     }
 #endif
 }

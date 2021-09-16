@@ -5,6 +5,8 @@ using UnityEngine;
 
 public class CuboTool : MonoBehaviour
 {
+    const int pointAmount = 11;
+
     [SerializeField] Gradient gradient = default;
     [SerializeField] GUIStyle style = default;
     [SerializeField] int fontSize = 5;
@@ -12,7 +14,7 @@ public class CuboTool : MonoBehaviour
     [SerializeField] float radius = .1f;
     [SerializeField] float heightCutPoint = .2f;
     [SerializeField] float planeSize = 1f;
-    [SerializeField] Vector3[] points = new Vector3[11];
+    [SerializeField] List<Vector3> points = new List<Vector3>();
 
     Vector3 PointCutCalculator(Vector3 begin, Vector3 end, float height)
     {
@@ -54,6 +56,11 @@ public class CuboTool : MonoBehaviour
 #if UNITY_EDITOR
     private void OnDrawGizmos()
     {
+        if(points.Count < pointAmount) 
+        {
+            points.Add(Vector3.zero);
+        }
+
         #region Calculo del cubo
 
         points[0] = Vector3.Normalize(points[0]);
@@ -80,14 +87,14 @@ public class CuboTool : MonoBehaviour
         // Grafico punto de corte
         Handles.color = Color.black;
         Handles.SphereHandleCap(0, cutPoint, Quaternion.identity, radius, EventType.Repaint);
-        Handles.Label(cutPoint + Camera.current.transform.right * .1f, $"X={cutPoint.x:0.00} \n Y={cutPoint.y:0.00} \n Z={cutPoint.z:0.00} \n Area={AreaCalculator(points[8], points[9], points[10],heightCutPoint)}");
+        Handles.Label(cutPoint + Camera.current.transform.right * .1f, $"Total Area = {AreaCalculator(points[8], points[9], points[10], heightCutPoint)} \n X={cutPoint.x:0.00} \n Y={cutPoint.y:0.00} \n Z={cutPoint.z:0.00} \n");
         Handles.DrawWireCube(cutPoint, new Vector3(planeSize, 0, planeSize));
         Handles.DrawLine(points[0], cutPoint, .01f);
 
-        for (int i = 0; i < points.Length; i++)
+        for (int i = 0; i < points.Count; i++)
         {
-            style.normal.textColor = gradient.Evaluate((float)i / (points.Length - 1));
-            Handles.color = gradient.Evaluate((float)i / (points.Length - 1));
+            style.normal.textColor = gradient.Evaluate((float)i / (points.Count - 1));
+            Handles.color = gradient.Evaluate((float)i / (points.Count - 1));
             Handles.SphereHandleCap(0, points[i], Quaternion.identity, radius, EventType.Repaint);
             Handles.Label(points[i] + Camera.current.transform.right * .1f, $"X={points[i].x:0.00} \n Y={points[i].y:0.00} \n Z={points[i].z:0.00}");
         }

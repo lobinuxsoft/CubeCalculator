@@ -8,13 +8,15 @@ public class CuboTool : MonoBehaviour
     const int pointAmount = 11;
 
     [SerializeField] Gradient gradient = default;
-    [SerializeField] GUIStyle style = default;
     [SerializeField] int fontSize = 5;
+    [SerializeField] float hOffset = .1f;
     [SerializeField] Color connectionColor = Color.cyan;
     [SerializeField] float radius = .1f;
     [SerializeField] float heightCutPoint = .2f;
     [SerializeField] float planeSize = 1f;
     [SerializeField] List<Vector3> points = new List<Vector3>();
+
+    GUIStyle style = default;
 
     Vector3 PointCutCalculator(Vector3 begin, Vector3 end, float height)
     {
@@ -53,6 +55,16 @@ public class CuboTool : MonoBehaviour
         return area;
     }
 
+    private void OnEnable()
+    {
+        style = new GUIStyle(EditorGUIUtility.GetBuiltinSkin(EditorSkin.Scene).GetStyle("Label"));
+    }
+
+    private void OnDisable()
+    {
+        style = null;
+    }
+
 #if UNITY_EDITOR
     private void OnDrawGizmos()
     {
@@ -80,14 +92,14 @@ public class CuboTool : MonoBehaviour
 
         #endregion
 
-        style.fontSize = Mathf.RoundToInt(Vector3.Distance(Camera.current.transform.position, this.transform.position)) * fontSize;
+        style.fontSize = Mathf.RoundToInt(Vector3.Distance(Camera.current.transform.position, this.transform.position)) + fontSize;
 
         style.normal.textColor = Color.black;
 
         // Grafico punto de corte
         Handles.color = Color.black;
         Handles.SphereHandleCap(0, cutPoint, Quaternion.identity, radius, EventType.Repaint);
-        Handles.Label(cutPoint + Camera.current.transform.right * .1f, $"Total Area = {AreaCalculator(points[8], points[9], points[10], heightCutPoint)} \n X={cutPoint.x:0.00} \n Y={cutPoint.y:0.00} \n Z={cutPoint.z:0.00} \n");
+        Handles.Label(cutPoint + Camera.current.transform.right * hOffset, $"Total Area = {AreaCalculator(points[8], points[9], points[10], heightCutPoint)} \n X={cutPoint.x:0.00} \n Y={cutPoint.y:0.00} \n Z={cutPoint.z:0.00} \n", style);
         Handles.DrawWireCube(cutPoint, new Vector3(planeSize, 0, planeSize));
         Handles.DrawLine(points[0], cutPoint, .01f);
 
@@ -96,7 +108,7 @@ public class CuboTool : MonoBehaviour
             style.normal.textColor = gradient.Evaluate((float)i / (points.Count - 1));
             Handles.color = gradient.Evaluate((float)i / (points.Count - 1));
             Handles.SphereHandleCap(0, points[i], Quaternion.identity, radius, EventType.Repaint);
-            Handles.Label(points[i] + Camera.current.transform.right * .1f, $"X={points[i].x:0.00} \n Y={points[i].y:0.00} \n Z={points[i].z:0.00}");
+            Handles.Label(points[i] + Camera.current.transform.right * hOffset, $"X={points[i].x:0.00} \n Y={points[i].y:0.00} \n Z={points[i].z:0.00}", style);
         }
 
         //Handles.color = gradient.Evaluate((float)7 / (points.Length - 1));

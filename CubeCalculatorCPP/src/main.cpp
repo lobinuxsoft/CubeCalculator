@@ -17,6 +17,10 @@ void main()
         points[i] = Vector3{ 0,0,0 };
     }
 
+    points[0] = { 0,0,0 };
+    points[1] = { 1,0.5f,0.5f };
+    points[2] = { 0.5f,0.5f,-1 };
+
     points[0] = Vector3Normalize(points[0]);
     points[1] = Vector3Normalize(points[1]);
     points[2] = Vector3Normalize(points[2]);
@@ -32,15 +36,27 @@ void main()
     std::cout << "Se creo un cubo con las siguientes coordenadas:" << std::endl;
     std::cout << std::endl;
 
-    for (int i = 0; i < pointsAmount; i++)
+    for (int i = 0; i < 8; i++)
     {
-        std::cout << "Punto " << i << ": (X = " << points[i].x << ", Y = " << points[i].y << ")." << std::endl;
+        std::cout << "Punto " << i << ": (X = " << points[i].x << ", Y = " << points[i].y << ", Z = " << points[i].z << ")." << std::endl;
+        std::cout << std::endl;
     }
 
     std::cout << std::endl;
     std::cout << "El cubo se lo corta horizontalmente en la coordenada (" << cutCoord.x << ", " << cutCoord.y << ", " << cutCoord.z << "), como el centro de corte." << std::endl;
-    std::cout << "Formando una piramide en su parte inferior." << std::endl;
+    std::cout << "Formando una piramide en su parte inferior, con coordenadas de corte en:" << std::endl;
+    std::cout << std::endl;
+
+    for (int i = 8; i < pointsAmount; i++)
+    {
+        std::cout << "Punto " << i-8 << ": (X = " << points[i].x << ", Y = " << points[i].y << ", Z = " << points[i].z << ")." << std::endl;
+        std::cout << std::endl;
+    }
+
+    std::cout << std::endl;
     std::cout << "El area total formada por las caras laterales de la piramide es: " << AreaCalculator(points[8], points[9], points[10], heightCutPoint) << std::endl;
+    std::cout << std::endl;
+    std::cout << std::endl;
 }
 
 Vector3 pointCutCalculator(Vector3 begin, Vector3 end, float height)

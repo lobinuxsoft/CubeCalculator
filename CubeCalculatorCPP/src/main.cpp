@@ -3,11 +3,13 @@
 #include "Vector3.h"
 
 Vector3 pointCutCalculator(Vector3 begin, Vector3 end, float height);
+float AreaCalculator(Vector3 point0, Vector3 point1, Vector3 point2, float height);
 
 void main()
 {
 	const int pointsAmount = 11;
 	float heightCutPoint = 0.2f;
+    Vector3 cutCoord = { 0,heightCutPoint,0 };
     Vector3 points[pointsAmount];
 
     for (int i = 0; i < pointsAmount; i++)
@@ -26,6 +28,19 @@ void main()
     points[8] = pointCutCalculator(points[0], points[4], heightCutPoint);
     points[9] = pointCutCalculator(points[0], points[1], heightCutPoint);
     points[10] = pointCutCalculator(points[0], points[2], heightCutPoint);
+
+    std::cout << "Se creo un cubo con las siguientes coordenadas:" << std::endl;
+    std::cout << std::endl;
+
+    for (int i = 0; i < pointsAmount; i++)
+    {
+        std::cout << "Punto " << i << ": (X = " << points[i].x << ", Y = " << points[i].y << ")." << std::endl;
+    }
+
+    std::cout << std::endl;
+    std::cout << "El cubo se lo corta horizontalmente en la coordenada (" << cutCoord.x << ", " << cutCoord.y << ", " << cutCoord.z << "), como el centro de corte." << std::endl;
+    std::cout << "Formando una piramide en su parte inferior." << std::endl;
+    std::cout << "El area total formada por las caras laterales de la piramide es: " << AreaCalculator(points[8], points[9], points[10], heightCutPoint) << std::endl;
 }
 
 Vector3 pointCutCalculator(Vector3 begin, Vector3 end, float height)

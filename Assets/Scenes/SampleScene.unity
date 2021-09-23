@@ -450,8 +450,8 @@ MonoBehaviour:
   points:
   - {x: 0, y: 10, z: 0}
   - {x: 10, y: 10, z: 0}
-  - {x: 0, y: 0, z: 10}
-  - {x: 10, y: 0, z: 10}
+  - {x: 0, y: 0, z: 0}
+  - {x: 10, y: 0, z: 0}
 --- !u!4 &1981865033
 Transform:
   m_ObjectHideFlags: 0

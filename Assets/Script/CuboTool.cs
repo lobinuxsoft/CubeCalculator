@@ -18,6 +18,11 @@ public class CuboTool : MonoBehaviour
 
     GUIStyle style = default;
 
+    private void OnValidate()
+    {
+        if(style == null) style = new GUIStyle(EditorGUIUtility.GetBuiltinSkin(EditorSkin.Scene).GetStyle("Label"));
+    }
+
     Vector3 PointCutCalculator(Vector3 begin, Vector3 end, float height)
     {
         Vector3 cutPoint;

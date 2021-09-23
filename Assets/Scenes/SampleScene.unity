@@ -232,7 +232,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &808495686
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -282,16 +282,16 @@ MonoBehaviour:
   planeSize: 1.88
   points:
   - {x: 0, y: 0, z: 0}
-  - {x: 0.8164966, y: 0.4082483, z: 0.4082483}
-  - {x: 0.4082483, y: 0.4082483, z: -0.8164966}
-  - {x: 1.2247449, y: 0.8164966, z: -0.4082483}
-  - {x: -0.5070926, y: 0.8451542, z: 0.16903085}
-  - {x: 0.30940402, y: 1.2534025, z: 0.57727915}
-  - {x: -0.09884429, y: 1.2534025, z: -0.64746577}
-  - {x: 0.7176523, y: 1.6616508, z: -0.23921746}
-  - {x: -0.18600003, y: 0.31, z: 0.062000003}
-  - {x: 0.62, y: 0.31, z: 0.31}
-  - {x: 0.31, y: 0.31, z: -0.62}
+  - {x: 1, y: 0, z: 0}
+  - {x: 0, y: 1, z: 0}
+  - {x: 1, y: 1, z: 0}
+  - {x: 0, y: 0, z: 1}
+  - {x: 1, y: 0, z: 1}
+  - {x: 0, y: 1, z: 1}
+  - {x: 1, y: 1, z: 1}
+  - {x: NaN, y: 0.31, z: Infinity}
+  - {x: Infinity, y: 0.31, z: NaN}
+  - {x: 0, y: 0.31, z: 0}
 --- !u!4 &808495687
 Transform:
   m_ObjectHideFlags: 0
@@ -405,7 +405,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!114 &1981865032
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -448,10 +448,10 @@ MonoBehaviour:
     m_NumColorKeys: 8
     m_NumAlphaKeys: 2
   points:
-  - {x: 10, y: 0, z: 0}
   - {x: 0, y: 10, z: 0}
+  - {x: 10, y: 10, z: 0}
   - {x: 0, y: 0, z: 10}
-  - {x: 10, y: 10, z: 10}
+  - {x: 10, y: 0, z: 10}
 --- !u!4 &1981865033
 Transform:
   m_ObjectHideFlags: 0

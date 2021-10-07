@@ -8,8 +8,6 @@ public class Vector3Test : MonoBehaviour
     [SerializeField] Gradient gradient = default;
     [SerializeField] private List<Vector3> points = new List<Vector3>();
 
-    int lastSize = 0;
-
     // Start is called before the first frame update
     void Start()
     {
@@ -26,24 +24,32 @@ public class Vector3Test : MonoBehaviour
         Vector3Debugger.AddVector(points[2], points[3], $"Rect 2");
 
         Vector3Debugger.EnableEditorView();
-
-        lastSize = points.Count;
     }
 
     // Update is called once per frame
     void Update()
     {
-        if(lastSize < points.Count) 
+        if (points.Count != 4)
         {
-            Vector3Debugger.AddVector(points[points.Count - 2], points[points.Count - 1], $"Point {points.Count-1}");
-            lastSize = points.Count;
-        }
+            Vector3Debugger.DeleteVector($"Rect 1");
+            Vector3Debugger.DeleteVector($"Rect 2");
+            points.Clear();
+            points.Add(Vector3.up);
+            points.Add(Vector3.up + Vector3.right);
+            points.Add(Vector3.zero);
+            points.Add(Vector3.right);
 
-        for (int i = 1; i < points.Count; i++)
-        {
-            Vector3Debugger.UpdateColor($"Point {i}", gradient.Evaluate((float)i / (points.Count - 1)));
-            Vector3Debugger.UpdatePosition($"Point {i}", points[i-1], points[i]);
+            Vector3Debugger.AddVector(points[0], points[1], gradient.Evaluate((float)1 / (points.Count - 1)), $"Rect 1");
+            Vector3Debugger.AddVector(points[2], points[3], gradient.Evaluate((float)3 / (points.Count - 1)), $"Rect 2");
         }
+        else
+        {
+            Vector3Debugger.UpdatePosition($"Rect 1", points[0], points[1]);
+            Vector3Debugger.UpdateColor($"Rect 1", gradient.Evaluate((float)1/(points.Count -1)));
+            Vector3Debugger.UpdatePosition($"Rect 2", points[2], points[3]);
+            Vector3Debugger.UpdateColor($"Rect 2", gradient.Evaluate((float)3 / (points.Count - 1)));
+        }
+        
 
         if (points.Count >= 4)
         {

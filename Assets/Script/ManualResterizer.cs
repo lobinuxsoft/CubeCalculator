@@ -30,7 +30,7 @@ public class ManualResterizer : MonoBehaviour
 
             // Punto medio
             Gizmos.color = Color.green;
-            Gizmos.DrawSphere(cam.transform.forward * cam.farClipPlane, cam.farClipPlane * .05f);
+            Gizmos.DrawSphere(cam.transform.position + cam.transform.forward * cam.farClipPlane, cam.farClipPlane * .05f);
 
             float frustumHeight = 2.0f * cam.farClipPlane * Mathf.Tan(cam.fieldOfView * 0.5f * Mathf.Deg2Rad);
             float frustumWidth = frustumHeight * cam.aspect;

@@ -37,10 +37,10 @@ public class ManualResterizer : MonoBehaviour
 
             // Esquinas del frustum
             corners = new Vector3[4];
-            corners[0] = (cam.transform.forward * cam.farClipPlane) + (cam.transform.right * (-frustumWidth *.5f));   // izquierda
-            corners[1] = (cam.transform.forward * cam.farClipPlane) + (cam.transform.right * (frustumWidth * .5f));   // derecha
-            corners[2] = (cam.transform.forward * cam.farClipPlane) + (cam.transform.up * (frustumHeight * .5f));   // Arriba
-            corners[3] = (cam.transform.forward * cam.farClipPlane) + (cam.transform.up * (-frustumHeight * .5f));   // Abajo
+            corners[0] = cam.transform.position + (cam.transform.forward * cam.farClipPlane) + (cam.transform.right * (-frustumWidth *.5f)) + (cam.transform.up * (frustumHeight * .5f));   // izquierda arriba
+            corners[1] = cam.transform.position + (cam.transform.forward * cam.farClipPlane) + (cam.transform.right * (frustumWidth * .5f)) + (cam.transform.up * (frustumHeight * .5f));   // derecha arriba
+            corners[2] = cam.transform.position + (cam.transform.forward * cam.farClipPlane) + (cam.transform.right * (-frustumWidth * .5f)) + (cam.transform.up * (-frustumHeight * .5f));   // izquierda abajo
+            corners[3] = cam.transform.position + (cam.transform.forward * cam.farClipPlane) + (cam.transform.right * (frustumWidth * .5f)) + (cam.transform.up * (-frustumHeight * .5f));   // derecha abajo
 
             for (int i = 0; i < corners.Length; i++)
             {

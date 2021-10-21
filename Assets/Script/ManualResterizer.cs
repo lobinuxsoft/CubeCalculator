@@ -68,38 +68,56 @@ public class ManualResterizer : MonoBehaviour
                 Vector3 v3 = item.mesh.vertices[item.mesh.GetIndices(0)[i + 2]];
                 Vector3 middlePoint = localToWorld.MultiplyPoint3x4((v1 + v2 + v3) / 3);
 
-                Gizmos.color = Color.red;
-
-                // Muestro los vertices de las mesh
-                Gizmos.DrawSphere(localToWorld.MultiplyPoint3x4(v1), .05f);
-                Gizmos.DrawSphere(localToWorld.MultiplyPoint3x4(v2), .05f);
-                Gizmos.DrawSphere(localToWorld.MultiplyPoint3x4(v3), .05f);
-
-                Gizmos.color = Color.yellow;
-                Gizmos.DrawSphere(middlePoint, .05f);
-
-                // TODO Conseguir el angulo del objeto a la camara
                 // Normal de un triangulo
                 Vector3 normal = NormalFromTriangle(v1, v2, v3);
                 Vector3 normalInWorld = localToWorld.MultiplyPoint3x4(normal);
 
-                float angle = Vector3.SignedAngle(-cam.transform.forward, normalInWorld, cam.transform.up);
-                Gizmos.color = Color.green;
+                Gizmos.color = Color.red;
 
-                if (angle > 90 || angle < -90) 
+                // Muestro los vertices de las mesh
+                if (InCamView((cam.transform.position - localToWorld.MultiplyPoint3x4(v1)).normalized, -cam.transform.forward))
                 {
-                    Gizmos.color = Color.black;
+                    Gizmos.DrawSphere(localToWorld.MultiplyPoint3x4(v1), .05f);
                 }
-                else
+
+                if (InCamView((cam.transform.position - localToWorld.MultiplyPoint3x4(v2)).normalized, -cam.transform.forward))
+                {
+                    Gizmos.DrawSphere(localToWorld.MultiplyPoint3x4(v2), .05f);
+                }
+
+                if (InCamView((cam.transform.position - localToWorld.MultiplyPoint3x4(v3)).normalized, -cam.transform.forward))
+                {
+                    Gizmos.DrawSphere(localToWorld.MultiplyPoint3x4(v3), .05f);
+                }
+
+                if(InCamView((cam.transform.position - middlePoint).normalized, -cam.transform.forward))
+                {
+                    Gizmos.color = Color.yellow;
+                    Gizmos.DrawSphere(middlePoint, .05f);
+                }
+
+                if (InCamView((cam.transform.position - normalInWorld).normalized, -cam.transform.forward)) 
                 {
                     Gizmos.color = Color.blue;
+                    Gizmos.DrawSphere(normalInWorld, .05f);
                 }
-
-                
-                Gizmos.DrawSphere(normalInWorld, .05f);
 
                 i += 3;
             }
+        }
+    }
+
+    bool InCamView(Vector3 lhs, Vector3 rhs)
+    {
+        float angle = Vector3.Angle(lhs, rhs);
+
+        if (angle < cam.focalLength && angle > -cam.focalLength)
+        {
+            return true;
+        }
+        else
+        {
+            return false;
         }
     }
 

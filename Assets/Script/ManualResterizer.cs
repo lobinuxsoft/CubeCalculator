@@ -2,6 +2,7 @@ using UnityEngine;
 
 public class ManualResterizer : MonoBehaviour
 {
+    [SerializeField, Range(0f, 1f)] float fieldOfViewOffset = 1f;
     [SerializeField, Range(8, 512)] int rasterResolution = 32;
     [SerializeField] Vector3[] corners = new Vector3[4];
     [SerializeField] MeshFilter[] filters;
@@ -32,15 +33,15 @@ public class ManualResterizer : MonoBehaviour
             Gizmos.color = Color.green;
             Gizmos.DrawSphere(cam.transform.position + cam.transform.forward * cam.farClipPlane, cam.farClipPlane * .05f);
 
-            float frustumHeight = 2.0f * cam.farClipPlane * Mathf.Tan(cam.fieldOfView * 0.5f * Mathf.Deg2Rad);
-            float frustumWidth = frustumHeight * cam.aspect;
-
             // Esquinas del frustum
             corners = new Vector3[4];
-            corners[0] = cam.transform.position + (cam.transform.forward * cam.farClipPlane) + (cam.transform.right * (-frustumWidth * .5f)) + (cam.transform.up * (frustumHeight * .5f));   // izquierda arriba
-            corners[1] = cam.transform.position + (cam.transform.forward * cam.farClipPlane) + (cam.transform.right * (frustumWidth * .5f)) + (cam.transform.up * (frustumHeight * .5f));   // derecha arriba
-            corners[2] = cam.transform.position + (cam.transform.forward * cam.farClipPlane) + (cam.transform.right * (-frustumWidth * .5f)) + (cam.transform.up * (-frustumHeight * .5f));   // izquierda abajo
-            corners[3] = cam.transform.position + (cam.transform.forward * cam.farClipPlane) + (cam.transform.right * (frustumWidth * .5f)) + (cam.transform.up * (-frustumHeight * .5f));   // derecha abajo
+
+            cam.CalculateFrustumCorners(new Rect(0,0,1,1), cam.farClipPlane, Camera.MonoOrStereoscopicEye.Mono, corners);
+
+            for (int i = 0; i < corners.Length; i++)
+            {
+                corners[i] = cam.transform.TransformVector(corners[i]);
+            }
 
             for (int i = 0; i < corners.Length; i++)
             {
@@ -49,7 +50,7 @@ public class ManualResterizer : MonoBehaviour
                 Gizmos.DrawSphere(corners[i], cam.farClipPlane * .05f);
             }
 
-            RasterGrig(corners[0], corners[1], corners[2], corners[3], rasterResolution);
+            RasterGrid(corners[0], corners[1], corners[2], corners[3], rasterResolution);
         }
     }
 
@@ -107,11 +108,11 @@ public class ManualResterizer : MonoBehaviour
         }
     }
 
-    bool InCamView(Vector3 lhs, Vector3 rhs)
+    bool InCamView(Vector3 from, Vector3 to)
     {
-        float angle = Vector3.Angle(lhs, rhs);
+        float angle = Vector3.Angle(from, to);
 
-        if (angle < cam.focalLength && angle > -cam.focalLength)
+        if (angle < cam.fieldOfView * fieldOfViewOffset && angle > -cam.fieldOfView * fieldOfViewOffset)
         {
             return true;
         }
@@ -121,7 +122,7 @@ public class ManualResterizer : MonoBehaviour
         }
     }
 
-    void RasterGrig(Vector3 v1, Vector3 v2, Vector3 v3, Vector3 v4, int resolution)
+    void RasterGrid(Vector3 leftDown, Vector3 leftUp, Vector3 rightUp, Vector3 rightDown, int resolution)
     {
         Vector3[] upV = new Vector3[resolution];
         Vector3[] downV = new Vector3[resolution];
@@ -133,25 +134,25 @@ public class ManualResterizer : MonoBehaviour
         // Busco los puntos de la grilla de arriba. 
         for (int i = 0; i < resolution; i++)
         {
-            upV[i] = Vector3.Lerp(v1, v2, (float)i / resolution);
+            upV[i] = Vector3.Lerp(leftUp, rightUp, (float)i / resolution);
         }
 
         // Busco los puntos de la grilla de abajo
         for (int i = 0; i < resolution; i++)
         {
-            downV[i] = Vector3.Lerp(v3, v4, (float)i / resolution);
+            downV[i] = Vector3.Lerp(leftDown, rightDown, (float)i / resolution);
         }
 
         // Busco los puntos de la grilla de la izquierda
         for (int i = 0; i < resolution/2; i++)
         {
-            leftV[i] = Vector3.Lerp(v1, v3, (float)i / (resolution/2));
+            leftV[i] = Vector3.Lerp(leftUp, leftDown, (float)i / (resolution/2));
         }
 
         // Busco los puntos de la grilla de la derecha
         for (int i = 0; i < resolution / 2; i++)
         {
-            rightV[i] = Vector3.Lerp(v2, v4, (float)i / (resolution / 2));
+            rightV[i] = Vector3.Lerp(rightUp, rightDown, (float)i / (resolution / 2));
         }
 
         // dibujo las lineas verticales

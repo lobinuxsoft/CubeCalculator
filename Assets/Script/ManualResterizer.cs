@@ -61,6 +61,8 @@ public class ManualResterizer : MonoBehaviour
             Matrix4x4 localToWorld = item.transform.localToWorldMatrix;
             int i = 0;
 
+            int counter = 0;
+
             // Para calcular las normales necesito el indice de grupo de vertices, para saber cuales forman una cara
             for (; i < item.mesh.GetIndices(0).Length;)
             {
@@ -99,12 +101,21 @@ public class ManualResterizer : MonoBehaviour
 
                 if (InCamView((cam.transform.position - normalInWorld).normalized, -cam.transform.forward)) 
                 {
-                    Gizmos.color = Color.blue;
-                    Gizmos.DrawSphere(normalInWorld, .05f);
+                    float normalAngle = Vector3.Angle((item.transform.position - normalInWorld).normalized, cam.transform.forward);
+
+                    if(normalAngle < 90)
+                    {
+                        counter++;
+
+                        Gizmos.color = Color.blue;
+                        Gizmos.DrawSphere(normalInWorld, .05f);
+                    }
                 }
 
                 i += 3;
             }
+
+            item.gameObject.SetActive(counter > 0);
         }
     }
 

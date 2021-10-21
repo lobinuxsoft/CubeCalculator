@@ -24,6 +24,9 @@ public class ManualResterizer : MonoBehaviour
         UseDataFromMesh();
     }
 
+    /// <summary>
+    /// Obtengo los datos del frustum para visualizarlo.
+    /// </summary>
     private void VisualizeFrustrum()
     {
         if (cam != null)
@@ -54,6 +57,9 @@ public class ManualResterizer : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Uso todos los datos de las mesh que estan dentro de la escena para hacer los respectivos calculos (prendo o apago el game object)
+    /// </summary>
     private void UseDataFromMesh()
     {
         foreach (var item in filters)
@@ -66,9 +72,13 @@ public class ManualResterizer : MonoBehaviour
             // Para calcular las normales necesito el indice de grupo de vertices, para saber cuales forman una cara
             for (; i < item.mesh.GetIndices(0).Length;)
             {
+                // Tomo los vertices ordenados proporcionados por unity
+
                 Vector3 v1 = item.mesh.vertices[item.mesh.GetIndices(0)[i]];
                 Vector3 v2 = item.mesh.vertices[item.mesh.GetIndices(0)[i + 1]];
                 Vector3 v3 = item.mesh.vertices[item.mesh.GetIndices(0)[i + 2]];
+
+                // Calculo el punto medio de la cara.
                 Vector3 middlePoint = localToWorld.MultiplyPoint3x4((v1 + v2 + v3) / 3);
 
                 // Normal de un triangulo
@@ -93,14 +103,17 @@ public class ManualResterizer : MonoBehaviour
                     Gizmos.DrawSphere(localToWorld.MultiplyPoint3x4(v3), .05f);
                 }
 
+                // Muestro el pumto medio de la cara
                 if(InCamView((cam.transform.position - middlePoint).normalized, -cam.transform.forward))
                 {
                     Gizmos.color = Color.yellow;
                     Gizmos.DrawSphere(middlePoint, .05f);
                 }
 
+                // Muestro la normal
                 if (InCamView((cam.transform.position - normalInWorld).normalized, -cam.transform.forward)) 
                 {
+                    // Calculo el angulo de la normal de la cara con respecto a donde mira la camara para saber si es visible o no.
                     float normalAngle = Vector3.Angle((item.transform.position - normalInWorld).normalized, cam.transform.forward);
 
                     if(normalAngle < 90)
@@ -119,6 +132,12 @@ public class ManualResterizer : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Reviso que la coordenada que le paso esta dentro del frustrum
+    /// </summary>
+    /// <param name="from"></param>
+    /// <param name="to"></param>
+    /// <returns></returns>
     bool InCamView(Vector3 from, Vector3 to)
     {
         float angle = Vector3.Angle(from, to);
@@ -133,6 +152,14 @@ public class ManualResterizer : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Dibujo la grilla del frustrum solo para visualizar
+    /// </summary>
+    /// <param name="leftDown"></param>
+    /// <param name="leftUp"></param>
+    /// <param name="rightUp"></param>
+    /// <param name="rightDown"></param>
+    /// <param name="resolution"></param>
     void RasterGrid(Vector3 leftDown, Vector3 leftUp, Vector3 rightUp, Vector3 rightDown, int resolution)
     {
         Vector3[] upV = new Vector3[resolution];
@@ -179,16 +206,17 @@ public class ManualResterizer : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Calculo la normal del triangulo en base a los vertices ordenados
+    /// </summary>
+    /// <param name="a"></param>
+    /// <param name="b"></param>
+    /// <param name="c"></param>
+    /// <returns></returns>
     private Vector3 NormalFromTriangle(Vector3 a, Vector3 b, Vector3 c) 
     {
         Vector3 dir = Vector3.Cross(b - a, c - a);
         Vector3 norm = Vector3.Normalize(dir);
         return norm;
     }
-}
-
-[System.Serializable]
-public struct Indices
-{
-    public int[] indices;
 }

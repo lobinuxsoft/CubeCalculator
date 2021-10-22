@@ -87,41 +87,38 @@ public class ManualResterizer : MonoBehaviour
 
                 Gizmos.color = Color.red;
 
+                // Reviso si uno de los vertices esta dentro de la camara para que se visualice el objeto.
+                bool vertexInCam = InCamView((cam.transform.position - localToWorld.MultiplyPoint3x4(v1)).normalized, -cam.transform.forward) ||
+                                   InCamView((cam.transform.position - localToWorld.MultiplyPoint3x4(v2)).normalized, -cam.transform.forward) ||
+                                   InCamView((cam.transform.position - localToWorld.MultiplyPoint3x4(v3)).normalized, -cam.transform.forward);
+
                 // Muestro los vertices de las mesh
-                if (InCamView((cam.transform.position - localToWorld.MultiplyPoint3x4(v1)).normalized, -cam.transform.forward))
+                if (vertexInCam)
                 {
                     Gizmos.DrawSphere(localToWorld.MultiplyPoint3x4(v1), .05f);
-                }
-
-                if (InCamView((cam.transform.position - localToWorld.MultiplyPoint3x4(v2)).normalized, -cam.transform.forward))
-                {
                     Gizmos.DrawSphere(localToWorld.MultiplyPoint3x4(v2), .05f);
-                }
-
-                if (InCamView((cam.transform.position - localToWorld.MultiplyPoint3x4(v3)).normalized, -cam.transform.forward))
-                {
                     Gizmos.DrawSphere(localToWorld.MultiplyPoint3x4(v3), .05f);
-                }
 
-                // Muestro el pumto medio de la cara
-                if(InCamView((cam.transform.position - middlePoint).normalized, -cam.transform.forward))
-                {
-                    Gizmos.color = Color.yellow;
-                    Gizmos.DrawSphere(middlePoint, .05f);
-                }
-
-                // Muestro la normal
-                if (InCamView((cam.transform.position - normalInWorld).normalized, -cam.transform.forward)) 
-                {
-                    // Calculo el angulo de la normal de la cara con respecto a donde mira la camara para saber si es visible o no.
-                    float normalAngle = Vector3.Angle((item.transform.position - normalInWorld).normalized, cam.transform.forward);
-
-                    if(normalAngle < 90)
+                    // Muestro el pumto medio de la cara
+                    if (InCamView((cam.transform.position - middlePoint).normalized, -cam.transform.forward))
                     {
-                        counter++;
+                        Gizmos.color = Color.yellow;
+                        Gizmos.DrawSphere(middlePoint, .05f);
+                    }
 
-                        Gizmos.color = Color.blue;
-                        Gizmos.DrawSphere(normalInWorld, .05f);
+                    // Muestro la normal de las caras que se estarian viendo
+                    if (InCamView((cam.transform.position - normalInWorld).normalized, -cam.transform.forward))
+                    {
+                        // Calculo el angulo de la normal de la cara con respecto a donde mira la camara para saber si es visible o no.
+
+                        float normalAngle = Vector3.Dot(-cam.transform.forward, (item.transform.position - normalInWorld).normalized);
+
+                        if (normalAngle < 0)
+                        {
+                            counter++;
+                            Gizmos.color = Color.blue;
+                            Gizmos.DrawSphere(normalInWorld, .05f);
+                        }
                     }
                 }
 

@@ -402,7 +402,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8a280a659404163459e02e34015427f3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  fieldOfViewOffset: 0.72
+  fieldOfViewOffset: 0.8
   rasterResolution: 32
   corners: []
   filters: []

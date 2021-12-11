@@ -20,9 +20,12 @@ public class FrustumCulling : MonoBehaviour
 
     Camera cam = default;
 
+    [SerializeField] MeshFilter[] filters = default;
+
     private void Start()
     {
         cam = Camera.main;
+        filters = FindObjectsOfType<MeshFilter>();
 
         CalculateFrustum();
     }
@@ -69,6 +72,41 @@ public class FrustumCulling : MonoBehaviour
             frustumCornerRight[i] = cam.transform.localToWorldMatrix.MultiplyPoint3x4(frustumCornerRight[i]);
             frustumCornerUp[i] = cam.transform.localToWorldMatrix.MultiplyPoint3x4(frustumCornerUp[i]);
             frustumCornerDown[i] = cam.transform.localToWorldMatrix.MultiplyPoint3x4(frustumCornerDown[i]);
+        }
+    }
+
+    /// <summary>
+    /// Uso todos los datos de las mesh que estan dentro de la escena para hacer los respectivos calculos (prendo o apago el game object)
+    /// </summary>
+    private void UseDataFromMesh()
+    {
+        foreach (var item in filters)
+        {
+            Matrix4x4 localToWorld = item.transform.localToWorldMatrix;
+            int i = 0;
+
+            int counter = 0;
+
+            // Para calcular las normales necesito el indice de grupo de vertices, para saber cuales forman una cara
+            for (; i < item.mesh.GetIndices(0).Length;)
+            {
+                // Tomo los vertices ordenados proporcionados por unity
+
+                Vector3 v1 = item.mesh.vertices[item.mesh.GetIndices(0)[i]];
+                Vector3 v2 = item.mesh.vertices[item.mesh.GetIndices(0)[i + 1]];
+                Vector3 v3 = item.mesh.vertices[item.mesh.GetIndices(0)[i + 2]];
+
+                // Paso las coordenadas locales a globales...
+                v1 = localToWorld.MultiplyPoint3x4(v1);
+                v2 = localToWorld.MultiplyPoint3x4(v2);
+                v3 = localToWorld.MultiplyPoint3x4(v3)
+
+                // TODO Si esta dentro del frustum se muestra el vertice...
+
+                //Aca va la logica del frustum...
+
+                i += 3; // Salto de a 3 vertices para mantener el orden
+            }
         }
     }
 

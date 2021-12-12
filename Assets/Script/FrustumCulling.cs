@@ -23,12 +23,15 @@ public class FrustumCulling : MonoBehaviour
 
     [SerializeField] MeshFilter[] filters = default;
 
+    BackFaceCulling backFaceScript = default;
+
     private void Start()
     {
         cam = Camera.main;
+        backFaceScript = GetComponent<BackFaceCulling>();
         filters = FindObjectsOfType<MeshFilter>();
-
         CalculateFrustum();
+
     }
 
     private void Update()
@@ -77,7 +80,7 @@ public class FrustumCulling : MonoBehaviour
         }
     }
 
-    Vector3 FromLocalToWolrd(Vector3 point, Transform transformRef)
+    private Vector3 FromLocalToWolrd(Vector3 point, Transform transformRef)
     {
         Vector3 result = Vector3.zero;
 
@@ -116,7 +119,8 @@ public class FrustumCulling : MonoBehaviour
                 if(IsVertexInFrustum(v1) || IsVertexInFrustum(v2) || IsVertexInFrustum(v3))
                 {
                     // TODO reemplazar por Back Face Culling
-                    item.gameObject.SetActive(true);
+                    //item.gameObject.SetActive(true);
+                    backFaceScript.SetFrustrumPlanes(frustumCornerFar, frustumCornerNear, item);
                 }
                 else
                 {

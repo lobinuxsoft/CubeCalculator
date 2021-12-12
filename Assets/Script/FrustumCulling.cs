@@ -40,6 +40,9 @@ public class FrustumCulling : MonoBehaviour
         FrustumUpdate();
     }
 
+    /// <summary>
+    /// Calculo el Frustum
+    /// </summary>
     private void CalculateFrustum()
     {
         cam.CalculateFrustumCorners(new Rect(0, 0, 1, 1), cam.farClipPlane, Camera.MonoOrStereoscopicEye.Mono, frustumCornerFar);
@@ -80,6 +83,12 @@ public class FrustumCulling : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Transformo las posiciones locales en globales
+    /// </summary>
+    /// <param name="point"></param>
+    /// <param name="transformRef"></param>
+    /// <returns></returns>
     private Vector3 FromLocalToWolrd(Vector3 point, Transform transformRef)
     {
         Vector3 result = Vector3.zero;
@@ -98,8 +107,6 @@ public class FrustumCulling : MonoBehaviour
     {
         foreach (var item in filters)
         {
-            //Matrix4x4 localToWorld = item.transform.localToWorldMatrix;
-
             // Para calcular las normales necesito el indice de grupo de vertices, para saber cuales forman una cara
             for (int i = 0; i < item.mesh.GetIndices(0).Length; i += 3) // Salto de a 3 vertices para mantener el orden
             {
@@ -114,12 +121,10 @@ public class FrustumCulling : MonoBehaviour
                 v2 = FromLocalToWolrd(v2, item.transform);
                 v3 = FromLocalToWolrd(v3, item.transform);
 
-                // TODO Si esta dentro del frustum se muestra el vertice...
                 // Aca se deberia pasar la data a otro script que realice el Back Face Culling
                 if(IsVertexInFrustum(v1) || IsVertexInFrustum(v2) || IsVertexInFrustum(v3))
                 {
-                    // TODO reemplazar por Back Face Culling
-                    //item.gameObject.SetActive(true);
+                    // Le paso el mesh filter (objeto a dibujar) al la clase encargada del Back Face Culling
                     backFaceScript.SetFrustrumPlanes(frustumCornerFar, frustumCornerNear, item);
                 }
                 else
@@ -130,6 +135,11 @@ public class FrustumCulling : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Verifico si un vertice esta contenido en el frustum
+    /// </summary>
+    /// <param name="vertex"></param>
+    /// <returns></returns>
     private bool IsVertexInFrustum(Vector3 vertex)
     {
         return IsVertexInNormalPlane(vertex, CenterOfPlane(frustumCornerFar), NormalFromPlane(frustumCornerFar)) &&
@@ -140,11 +150,23 @@ public class FrustumCulling : MonoBehaviour
             IsVertexInNormalPlane(vertex, CenterOfPlane(frustumCornerDown), NormalFromPlane(frustumCornerDown));
     }
 
+    /// <summary>
+    /// Calculo la normal de un plano y la direccion desde el centro del plano al vertice, para saber si esta en la misma direccion de la normal del plano.
+    /// </summary>
+    /// <param name="vertex"></param>
+    /// <param name="centerPlane"></param>
+    /// <param name="normalPlane"></param>
+    /// <returns></returns>
     private bool IsVertexInNormalPlane(Vector3 vertex, Vector3 centerPlane , Vector3 normalPlane)
     {
         return Vector3.Dot((vertex - centerPlane).normalized, normalPlane) > 0; // Si es mayor a cero esta por delante de la cara del plano.
     }
 
+    /// <summary>
+    /// Calculo la normal de un plano en base a sus vertices
+    /// </summary>
+    /// <param name="plane"></param>
+    /// <returns></returns>
     Vector3 NormalFromPlane(Vector3[] plane)
     {
         // Vector3 dir = Vector3.Cross(b - a, c - a); solo tomamos 3 vertices, descartamos el cuarto
@@ -153,6 +175,11 @@ public class FrustumCulling : MonoBehaviour
         return norm;
     }
 
+    /// <summary>
+    /// Calculo el centro del plano en base a sus vertices
+    /// </summary>
+    /// <param name="plane"></param>
+    /// <returns></returns>
     Vector3 CenterOfPlane(Vector3[] plane)
     {
         float sumX = 0;

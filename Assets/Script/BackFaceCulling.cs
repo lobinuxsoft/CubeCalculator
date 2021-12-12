@@ -1,4 +1,3 @@
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -8,20 +7,23 @@ using UnityEditor;
 
 public class BackFaceCulling : MonoBehaviour
 {
-    int resolutionGrid = 20;
+    [SerializeField, Range(8, 64)] int resolutionGrid = 20;
     [SerializeField] Color planeColor = Color.green;
-    Vector3[] gridPointsFarPlaneArr = default;
-    Vector3[] gridPointsNearPlaneArr = default;
-    Vector3[] farPlane = default;
-    Vector3[] nearPlane = default;
-    Vector3[] gridNormals = default;
+    [SerializeField] Color gridColor = Color.green;
+    [SerializeField] Color normalsColor = Color.yellow;
+    [SerializeField, Range(.01f, 10f)] float dottedLineSize = .1f;
+    Vector3[] gridPointsFarPlaneArr = new Vector3[0];
+    Vector3[] gridPointsNearPlaneArr = new Vector3[0];
+    Vector3[] farPlane = new Vector3[0];
+    Vector3[] nearPlane = new Vector3[0];
+    Vector3[] gridNormals = new Vector3[0];
 
     public void SetFrustrumPlanes(Vector3[] farPlane, Vector3[] nearPlane, MeshFilter meshRef)
     {
         this.farPlane = farPlane;
         this.nearPlane = nearPlane;
-        gridPointsFarPlaneArr = CalculateGrid(farPlane);
-        gridPointsNearPlaneArr = CalculateGrid(nearPlane);
+        gridPointsFarPlaneArr = CalculateGrid(this.farPlane);
+        gridPointsNearPlaneArr = CalculateGrid(this.nearPlane);
         gridNormals = CalculateNormalsGrid(gridPointsFarPlaneArr, gridPointsNearPlaneArr);
         CheckMeshInGrid(meshRef, gridNormals);
     }
@@ -74,8 +76,6 @@ public class BackFaceCulling : MonoBehaviour
 
     private void CheckMeshInGrid(MeshFilter meshRef, Vector3[] gridNormals)
     {
-        //Matrix4x4 localToWorld = item.transform.localToWorldMatrix;
-
         // Para calcular las normales necesito el indice de grupo de vertices, para saber cuales forman una cara
         for (int i = 0; i < meshRef.mesh.GetIndices(0).Length; i += 3) // Salto de a 3 vertices para mantener el orden
         {
@@ -122,31 +122,34 @@ public class BackFaceCulling : MonoBehaviour
         if(farPlane.Length > 0) Handles.DrawAAConvexPolygon(farPlane);
         if (nearPlane.Length > 0) Handles.DrawAAConvexPolygon(nearPlane);
 
-
-        if(gridPointsFarPlaneArr.Length > 0)
+        // Dibujo la grilla del far plane
+        Handles.color = gridColor;
+        if (gridPointsFarPlaneArr.Length > 0)
         {
             for(int i = 0; i < gridPointsFarPlaneArr.Length; i++)
             {
                 Handles.SphereHandleCap(0, gridPointsFarPlaneArr[i], Quaternion.identity, 0.25f, EventType.Repaint);
-            }
-        }
-
-
-        if (gridPointsNearPlaneArr.Length > 0)
-        {
-            for (int i = 0; i < gridPointsNearPlaneArr.Length; i++)
-            {
                 Handles.SphereHandleCap(0, gridPointsNearPlaneArr[i], Quaternion.identity, 0.25f, EventType.Repaint);
+                Handles.DrawDottedLine(gridPointsFarPlaneArr[i], gridPointsNearPlaneArr[i], dottedLineSize);
             }
         }
 
+        // Dibujo las normales de far plane
         if (gridNormals.Length > 0)
         {
             for (int i = 0; i < gridNormals.Length; i++)
             {
+                Handles.color = normalsColor;
                 Handles.ArrowHandleCap(0, gridPointsFarPlaneArr[i], Quaternion.LookRotation(gridNormals[i]), 1, EventType.Repaint);
             }
         }
+
+        // Borro para que no se dibuje nada si no hay objetos dentro del frustum
+        farPlane = new Vector3[0];
+        nearPlane = new Vector3[0];
+        gridPointsFarPlaneArr = new Vector3[0];
+        gridPointsNearPlaneArr = new Vector3[0];
+        gridNormals = new Vector3[0];
     }
 #endif
 }
